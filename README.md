@@ -1,2 +1,2 @@
-# Algrithms_exec
-Some algrithms realization of &lt;Introduction to Algrithms> 
+# Algorithms_exec
+Some Algorithms realization of &lt;Introduction to Algorithms> 
