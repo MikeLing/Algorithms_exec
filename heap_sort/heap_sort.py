@@ -1,50 +1,60 @@
-def heap_sort(a):
-	build_max_heap(a)
-	d = {}
-	heap_size = len(a) + 1
-	list_to_dic(a,d)
-	for i in reversed(range(2,heap_size)):
-		exchange(d,1,i)
-		a[i-1] = d.pop(i)
-		max_heapifu(d,1)		
-	a[0] = d[1]	
-
-def build_max_heap(a):
-	heap_size = len(a)
-	d = {}
-	list_to_dic(a,d)
-	for i in reversed(range(1,int(heap_size/2))):
-		max_heapifu(d,i)
-	dic_to_list(d,a)	
+left = lambda i: i * 2
+right = lambda i: i * 2 + 1
+parent = lambda i: i / 2
+pos = lambda i: i - 1
 
 
-def max_heapifu(a,i):
-	l = left(i)
-	r = right(i)
-	heap_size = len(a)
-	largest_index = i
-	if l <= heap_size and a[l] > a[i]:
-		largest_index = l
-	if r <= heap_size and a[r] > a[largest_index]:
-		largest_index = r
-	if largest_index != i:
-		exchange(a,i,largest_index)
-		max_heapifu(a,largest_index)
+class Heap(list):
+
+    def __init__(self, A):
+        self.heap_size = len(A)
+        self.extend(A)
+
+    def to_list(self):
+        return list(self)
+
+    def length(self):
+        return len(self)
+
+    def swap(self, i, j):
+        self[pos(i)], self[pos(j)] = self[pos(j)], self[pos(i)]
+
+    def pos(self, i):
+        return self[pos(i)]
 
 
-def list_to_dic(a,c):
-	for i in reversed(range(1,len(a)+1)):
-		c[i] = a[i-1]
+def max_heapify(heap, i):
+    l, r = left(i), right(i)
 
-def dic_to_list(c,a):
-	for i in c.keys():
-		a[i-1] = c[i]
-def left(i):
-	return 2*i
+    if l <= heap.heap_size and heap.pos(l) > heap.pos(i):
+        largest = l
+    else:
+        largest = i
 
-def right(i):
-	return 2*i + 1
-def exchange(a,i,l):
-	temp = a[i]
-	a[i] = a[l]
-	a[l]= temp
+    if r <= heap.heap_size and heap.pos(r) > heap.pos(largest):
+        largest = r
+
+    if largest != i:
+        heap.swap(i, largest)
+        max_heapify(heap, largest)
+
+
+def build_max_heap(A):
+    heap = Heap(A)
+
+    for i in range(int(heap.length() / 2), 0, -1):
+        max_heapify(heap, i)
+
+    return heap
+
+
+def heap_sort(A):
+    heap = build_max_heap(A)
+
+    for i in range(heap.length(), 1, -1):
+        heap.swap(i, 1)
+        heap.heap_size -= 1
+        max_heapify(heap, 1)
+
+    return heap
+
